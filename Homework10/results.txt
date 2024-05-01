@@ -1,0 +1,124 @@
+** GET /students (all students): **
+[]
+
+** POST /students (create student): **
+{
+  "age": 25,
+  "first_name": "John",
+  "id": "1",
+  "last_name": "Doe"
+}
+
+** POST /students (create student): **
+{
+  "age": 22,
+  "first_name": "Jane",
+  "id": "2",
+  "last_name": "Smith"
+}
+
+** POST /students (create student): **
+{
+  "age": 30,
+  "first_name": "Alice",
+  "id": "3",
+  "last_name": "Williams"
+}
+
+** GET /students (all students after creating 3): **
+[
+  {
+    "age": "25",
+    "first_name": "John",
+    "id": "1",
+    "last_name": "Doe"
+  },
+  {
+    "age": "22",
+    "first_name": "Jane",
+    "id": "2",
+    "last_name": "Smith"
+  },
+  {
+    "age": "30",
+    "first_name": "Alice",
+    "id": "3",
+    "last_name": "Williams"
+  }
+]
+
+** PATCH /students/2 (update age): **
+{
+  "age": 23,
+  "first_name": "Jane",
+  "id": "2",
+  "last_name": "Smith"
+}
+
+** GET /students/2 (after update): **
+{
+  "age": "23",
+  "first_name": "Jane",
+  "id": "2",
+  "last_name": "Smith"
+}
+
+** PUT /students/3 (update all): **
+{
+  "age": 31,
+  "first_name": "Alex",
+  "id": "3",
+  "last_name": "Thompson"
+}
+
+** GET /students/3 (after PUT): **
+{
+  "age": "31",
+  "first_name": "Alex",
+  "id": "3",
+  "last_name": "Thompson"
+}
+
+** GET /students (all students after updates): **
+[
+  {
+    "age": "25",
+    "first_name": "John",
+    "id": "1",
+    "last_name": "Doe"
+  },
+  {
+    "age": "23",
+    "first_name": "Jane",
+    "id": "2",
+    "last_name": "Smith"
+  },
+  {
+    "age": "31",
+    "first_name": "Alex",
+    "id": "3",
+    "last_name": "Thompson"
+  }
+]
+
+** DELETE /students/1 (delete student): **
+{
+  "message": "Student deleted successfully"
+}
+
+** GET /students (all students after deletion): **
+[
+  {
+    "age": "23",
+    "first_name": "Jane",
+    "id": "2",
+    "last_name": "Smith"
+  },
+  {
+    "age": "31",
+    "first_name": "Alex",
+    "id": "3",
+    "last_name": "Thompson"
+  }
+]
+
