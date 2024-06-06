@@ -1,0 +1,53 @@
+pipeline {
+    agent { label 'jenkins-worker' }
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
+        DOCKER_HUB_REPO = 'mukorsupa/nodejs-test-app'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/mukorsupa/StepProj2'
+            }
+        }
+        stage('Verify Docker') {
+            steps {
+                sh 'docker --version'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build(DOCKER_HUB_REPO)
+                }
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                script {
+                    docker.image(DOCKER_HUB_REPO).inside {
+                        sh 'npm install'
+                        sh 'npm test'
+                    }
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            when {
+                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
+            }
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_HUB_CREDENTIALS) {
+                        docker.image(DOCKER_HUB_REPO).push('latest')
+                    }
+                }
+            }
+        }
+    }
+    post {
+        failure {
+            echo 'Tests failed'
+        }
+    }
+}
