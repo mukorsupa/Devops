@@ -1,0 +1,59 @@
+---
+- name: Setup EC2 instances with Docker and Nginx
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Install Docker module for Python
+      pip:
+        name: docker
+
+    - name: Install Docker Compose
+      pip:
+        name: docker-compose
+
+    - name: Pull Nginx image
+      docker_image:
+        name: nginx
+        source: pull
+
+    - name: Create Docker Compose file
+      copy:
+        content: |
+          version: '3'
+          services:
+            nginx:
+              image: nginx
+              ports:
+                - "80:80"
+        dest: /home/ubuntu/docker-compose.yml
+
+    - name: Run Docker Compose
+      command: docker-compose -f /home/ubuntu/docker-compose.yml up -d
