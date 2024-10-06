@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: random-string-deployment
+spec:
+  replicas: 3  # Ensures multiple pods are created
+  selector:
+    matchLabels:
+      app: random-string
+  template:
+    metadata:
+      labels:
+        app: random-string
+    spec:
+      containers:
+      - name: random-string-container
+        image: your_dockerhub_username/python-random:latest
+        ports:
+        - containerPort: 80
