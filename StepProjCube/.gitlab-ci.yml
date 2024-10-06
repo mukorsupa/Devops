@@ -1,0 +1,19 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
+    - docker build -t your-dockerhub-username/python-app:latest .
+    - docker push your-dockerhub-username/python-app:latest
+
+deploy:
+  stage: deploy
+  script:
+    - echo "$KUBECONFIG" > kubeconfig
+    - export KUBECONFIG=$(pwd)/kubeconfig
+    - kubectl apply -f kubernetes/mysql-deployment.yaml
+    - kubectl apply -f kubernetes/deployment.yaml
+    - kubectl apply -f kubernetes/service.yaml

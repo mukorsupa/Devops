@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-app
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      containers:
+      - name: python-app
+        image: your-dockerhub-username/python-app:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MYSQL_HOST
+          value: mysql
+        volumeMounts:
+        - name: app-storage
+          mountPath: /data
+      volumes:
+      - name: app-storage
+        persistentVolumeClaim:
+          claimName: app-pvc
